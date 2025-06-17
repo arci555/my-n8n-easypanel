@@ -5,17 +5,23 @@ FROM n8nio/n8n:1.95.3
 USER root
 
 # --- Inicio de la sección para Oracle Instant Client ---
-# Copia el archivo ZIP del Oracle Instant Client desde tu contexto de compilación al contenedor
-# ¡IMPORTANTE!: Este archivo ZIP (instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip)
-# DEBE estar en la misma carpeta que este Dockerfile en tu repositorio de GitHub.
-COPY instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip /opt/oracle/
+# Instala wget para descargar el archivo ZIP
+RUN apk add --no-cache wget
+
+# Define la URL de descarga de tu archivo ZIP de Oracle Instant Client
+ENV ORACLE_INSTANT_CLIENT_URL="https://drive.google.com/uc?export=download&id=1kpENp5x21ZgCnmvcsbTOz9qpSkc2d__P"
+ENV ORACLE_INSTANT_CLIENT_ZIP_NAME="instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip"
+
+# Crea el directorio y descarga el archivo ZIP
+RUN mkdir -p /opt/oracle && \
+    wget -O /opt/oracle/${ORACLE_INSTANT_CLIENT_ZIP_NAME} ${ORACLE_INSTANT_CLIENT_URL}
 
 # Instala dependencias de Alpine Linux necesarias (libaio para Oracle, unzip para descomprimir)
 # Descomprime el Instant Client, borra el ZIP y crea un enlace simbólico para simplificar la ruta
 RUN apk add --no-cache libaio unzip && \
     cd /opt/oracle && \
-    unzip instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip && \
-    rm instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip && \
+    unzip ${ORACLE_INSTANT_CLIENT_ZIP_NAME} && \
+    rm ${ORACLE_INSTANT_CLIENT_ZIP_NAME} && \
     ln -s /opt/oracle/instantclient_* /opt/oracle/instantclient
 
 # Configura las variables de entorno para que el sistema encuentre las librerías de Oracle
@@ -23,8 +29,7 @@ ENV LD_LIBRARY_PATH=/opt/oracle/instantclient
 ENV PATH=$LD_LIBRARY_PATH:$PATH
 # --- Fin de la sección para Oracle Instant Client ---
 
-# Instala el nodo comunitario para Oracle (o el que estés usando, asegúrate del nombre exacto)
-# Usaré 'n8n-nodes-oracle' y 'oracledb' como en tu ejemplo previo que te funcionó
+# Instala el nodo comunitario para Oracle (o el que estés usando)
 RUN npm install -g n8n-nodes-oracle
 RUN npm install -g oracledb
 
