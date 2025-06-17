@@ -2,10 +2,10 @@ FROM n8nio/n8n:1.95.3
 
 USER root
 
-# Instala wget, unzip y libaio1 (dependencias necesarias)
-RUN apt-get update && apt-get install -y wget unzip libaio1
+# Instala wget, unzip y libaio en Alpine
+RUN apk add --no-cache wget unzip libaio
 
-# Descarga el ZIP del Oracle Instant Client directamente (ajusta la URL si cambias de versión)
+# Descarga el ZIP del Oracle Instant Client (ajusta la URL si cambias de versión)
 ENV ORACLE_INSTANT_CLIENT_URL="https://download.oracle.com/otn_software/linux/instantclient/instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip"
 ENV ORACLE_INSTANT_CLIENT_ZIP_NAME="instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip"
 
@@ -26,4 +26,3 @@ RUN npm install -g n8n-nodes-oracle oracledb
 ENV N8N_CUSTOM_EXTENSIONS="/usr/local/lib/node_modules/n8n-nodes-oracle"
 
 USER node
-
