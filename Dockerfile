@@ -3,6 +3,7 @@ FROM n8nio/n8n:latest
 USER root
 
 RUN apk add --no-cache libaio unzip wget
+RUN apk add --no-cache iputils
 
 RUN mkdir -p /opt/oracle && \
     wget -O /opt/oracle/instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip "https://www.dropbox.com/scl/fi/oh9imwc3x480d177oqxo3/instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip?rlkey=0gc6uj25sd03b1m9j10po67ij&st=ujdkj75x&dl=1"
