@@ -6,7 +6,7 @@ RUN apk add --no-cache libaio unzip wget
 RUN apk add --no-cache iputils
 
 RUN mkdir -p /opt/oracle && \
-    wget -O /opt/oracle/instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip "https://www.dropbox.com/scl/fi/oh9imwc3x480d177oqxo3/instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip?rlkey=0gc6uj25sd03b1m9j10po67ij&st=ujdkj75x&dl=1"
+    wget -O /opt/oracle/instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip "https://www.dropbox.com/scl/fi/tiunqwm6s9bwdde3wednw/instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip?rlkey=kgbdvye002kl5uib8y6vvfm8y&st=ggg9llr1&dl=1"
 
 RUN cd /opt/oracle && \
     unzip instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip && \
