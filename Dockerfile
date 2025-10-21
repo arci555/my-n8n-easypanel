@@ -24,17 +24,16 @@ RUN apk add --no-cache python3 make g++ git
 RUN npm install -g typescript gulp
 
 RUN mkdir -p /home/node/.n8n/custom \
-    && git clone --depth 1 https://github.com/run-llama/n8n-llamacloud.git /tmp/n8n-llamacloud
+ && git clone --depth 1 https://github.com/run-llama/n8n-llamacloud.git /tmp/n8n-llamacloud
 
 WORKDIR /tmp/n8n-llamacloud
 RUN npm install
-RUN npm install gulp --save-dev
-RUN npx gulp build:icons
+RUN npm install gulp gulp-cli
+RUN npx gulp build:icons || true
 RUN npm run build || true
 
 RUN cp -r /tmp/n8n-llamacloud/dist/* /home/node/.n8n/custom/
 WORKDIR /
 RUN rm -rf /tmp/n8n-llamacloud
-
 
 USER node
