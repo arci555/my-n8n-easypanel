@@ -20,16 +20,14 @@ RUN npm install -g n8n-nodes-oracle
 ENV N8N_CUSTOM_EXTENSIONS="/usr/local/lib/node_modules/n8n-nodes-oracle"
 RUN npm install -g oracledb
 
-# Instala git para descargar los nodos
-RUN apk add --no-cache git
-
-# Crea la carpeta "custom" si no existe y descarga los nodos LlamaCloud
+RUN apk add --no-cache python3 make g++ git
 RUN npm install -g typescript gulp
+
 RUN mkdir -p /home/node/.n8n/custom && \
     git clone --depth 1 https://github.com/run-llama/n8n-llamacloud.git /tmp/n8n-llamacloud && \
     cd /tmp/n8n-llamacloud && \
     npm install && \
-    npm install gulp && \
+    npm install gulp --save-dev && \
     npm run build && \
     cp -r dist/* /home/node/.n8n/custom/ && \
     rm -rf /tmp/n8n-llamacloud
