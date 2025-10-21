@@ -27,7 +27,7 @@ RUN mkdir -p /data/custom && \
 WORKDIR /tmp/n8n-llamacloud
 RUN npm install && \
     npm install gulp gulp-cli && \
-    sed -i 's/gulp build:icons/npx gulp build:icons/g' package.json && \
+    sed -i 's/gulp build:icons/\.\/node_modules\/.bin\/gulp build:icons/g' package.json && \
     npm run build && \
     cp -r /tmp/n8n-llamacloud/dist/* /data/custom/
 
