@@ -26,7 +26,10 @@ RUN apk add --no-cache git
 # Crea la carpeta "custom" si no existe y descarga los nodos LlamaCloud
 RUN mkdir -p /home/node/.n8n/custom && \
     git clone --depth 1 https://github.com/run-llama/n8n-llamacloud.git /tmp/n8n-llamacloud && \
-    cp -r /tmp/n8n-llamacloud/dist/* /home/node/.n8n/custom/ && \
+    cd /tmp/n8n-llamacloud && \
+    npm install && \
+    npm run build && \
+    cp -r dist/* /home/node/.n8n/custom/ && \
     rm -rf /tmp/n8n-llamacloud
 
 USER node
