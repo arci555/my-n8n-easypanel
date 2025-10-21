@@ -29,6 +29,7 @@ RUN mkdir -p /home/node/.n8n/custom && \
     git clone --depth 1 https://github.com/run-llama/n8n-llamacloud.git /tmp/n8n-llamacloud && \
     cd /tmp/n8n-llamacloud && \
     npm install && \
+    npm install gulp && \
     npm run build && \
     cp -r dist/* /home/node/.n8n/custom/ && \
     rm -rf /tmp/n8n-llamacloud
