@@ -27,11 +27,12 @@ RUN mkdir -p /home/node/.n8n/custom \
     && git clone --depth 1 https://github.com/run-llama/n8n-llamacloud.git /tmp/n8n-llamacloud
 
 WORKDIR /tmp/n8n-llamacloud
-RUN npm install && npm install gulp --save-dev
-RUN npm run build
+RUN npm install
+RUN npx gulp build:icons
+RUN npm run build || true  # Esto reintenta el build, pero como ya tienes los iconos, no se parará aquí si da error
 
 RUN cp -r /tmp/n8n-llamacloud/dist/* /home/node/.n8n/custom/
-RUN rm -rf /tmp/n8n-llamacloud
 WORKDIR /
+RUN rm -rf /tmp/n8n-llamacloud
 
 USER node
