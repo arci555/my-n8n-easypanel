@@ -28,11 +28,13 @@ RUN mkdir -p /home/node/.n8n/custom \
 
 WORKDIR /tmp/n8n-llamacloud
 RUN npm install
+RUN npm install gulp --save-dev
 RUN npx gulp build:icons
-RUN npm run build || true  # Esto reintenta el build, pero como ya tienes los iconos, no se parará aquí si da error
+RUN npm run build || true
 
 RUN cp -r /tmp/n8n-llamacloud/dist/* /home/node/.n8n/custom/
 WORKDIR /
 RUN rm -rf /tmp/n8n-llamacloud
+
 
 USER node
