@@ -24,6 +24,7 @@ RUN npm install -g oracledb
 RUN apk add --no-cache git
 
 # Crea la carpeta "custom" si no existe y descarga los nodos LlamaCloud
+RUN npm install -g typescript gulp
 RUN mkdir -p /home/node/.n8n/custom && \
     git clone --depth 1 https://github.com/run-llama/n8n-llamacloud.git /tmp/n8n-llamacloud && \
     cd /tmp/n8n-llamacloud && \
