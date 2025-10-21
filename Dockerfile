@@ -23,13 +23,15 @@ RUN npm install -g oracledb
 RUN apk add --no-cache python3 make g++ git
 RUN npm install -g typescript gulp
 
-RUN mkdir -p /home/node/.n8n/custom && \
-    git clone --depth 1 https://github.com/run-llama/n8n-llamacloud.git /tmp/n8n-llamacloud && \
-    cd /tmp/n8n-llamacloud && \
-    npm install && \
-    npm install gulp --save-dev && \
-    npm run build && \
-    cp -r dist/* /home/node/.n8n/custom/ && \
-    rm -rf /tmp/n8n-llamacloud
+RUN mkdir -p /home/node/.n8n/custom \
+    && git clone --depth 1 https://github.com/run-llama/n8n-llamacloud.git /tmp/n8n-llamacloud
+
+WORKDIR /tmp/n8n-llamacloud
+RUN npm install && npm install gulp --save-dev
+RUN npm run build
+
+RUN cp -r /tmp/n8n-llamacloud/dist/* /home/node/.n8n/custom/
+RUN rm -rf /tmp/n8n-llamacloud
+WORKDIR /
 
 USER node
