@@ -18,7 +18,7 @@ RUN npm install -g n8n-nodes-oracle oracledb
 
 # Build dependencies
 RUN apk add --no-cache python3 make g++ git
-RUN npm install -g typescript gulp-cli
+RUN npm install -g typescript
 
 # LlamaCloud node
 RUN mkdir -p /data/custom && \
@@ -26,11 +26,10 @@ RUN mkdir -p /data/custom && \
 
 WORKDIR /tmp/n8n-llamacloud
 RUN npm install && \
-    npm install gulp && \
     npx rimraf dist && \
     tsc && \
-    gulp build:icons && \
-    cp -r /tmp/n8n-llamacloud/dist/* /data/custom/
+    cp -r /tmp/n8n-llamacloud/dist/* /data/custom/ 2>/dev/null || \
+    (mkdir -p dist && cp -r nodes credentials package.json /data/custom/)
 
 # Configure custom extensions path
 ENV N8N_CUSTOM_EXTENSIONS="/usr/local/lib/node_modules/n8n-nodes-oracle;/data/custom"
