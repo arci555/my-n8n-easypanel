@@ -18,7 +18,7 @@ RUN npm install -g n8n-nodes-oracle oracledb
 
 # Build dependencies
 RUN apk add --no-cache python3 make g++ git
-RUN npm install -g typescript
+RUN npm install -g typescript gulp-cli
 
 # LlamaCloud node
 RUN mkdir -p /data/custom && \
