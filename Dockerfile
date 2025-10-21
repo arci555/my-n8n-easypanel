@@ -1,4 +1,4 @@
-FROM n8nio/n8n:1.109.2
+FROM n8nio/n8n:1.115.3
 
 USER root
 
@@ -19,5 +19,14 @@ ENV PATH=$LD_LIBRARY_PATH:$PATH
 RUN npm install -g n8n-nodes-oracle
 ENV N8N_CUSTOM_EXTENSIONS="/usr/local/lib/node_modules/n8n-nodes-oracle"
 RUN npm install -g oracledb
+
+# Instala git para descargar los nodos
+RUN apk add --no-cache git
+
+# Crea la carpeta "custom" si no existe y descarga los nodos LlamaCloud
+RUN mkdir -p /home/node/.n8n/custom && \
+    git clone --depth 1 https://github.com/run-llama/n8n-llamacloud.git /tmp/n8n-llamacloud && \
+    cp -r /tmp/n8n-llamacloud/dist/* /home/node/.n8n/custom/ && \
+    rm -rf /tmp/n8n-llamacloud
 
 USER node
