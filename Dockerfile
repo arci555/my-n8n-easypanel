@@ -1,11 +1,14 @@
 FROM n8nio/n8n:1.115.3
+
 USER root
 
-# Oracle Client setup
-RUN apk add --no-cache libaio unzip wget iputils
+RUN apk add --no-cache libaio unzip wget
+RUN apk add --no-cache iputils
+
 RUN mkdir -p /opt/oracle && \
-    wget -O /opt/oracle/instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip "https://www.dropbox.com/scl/fi/tiunqwm6s9bwdde3wednw/instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip?rlkey=kgbdvye002kl5uib8y6vvfm8y&st=ggg9llr1&dl=1" && \
-    cd /opt/oracle && \
+    wget -O /opt/oracle/instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip "https://www.dropbox.com/scl/fi/tiunqwm6s9bwdde3wednw/instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip?rlkey=kgbdvye002kl5uib8y6vvfm8y&st=ggg9llr1&dl=1"
+
+RUN cd /opt/oracle && \
     unzip instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip && \
     rm instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip && \
     ln -s /opt/oracle/instantclient_* /opt/oracle/instantclient
@@ -13,28 +16,27 @@ RUN mkdir -p /opt/oracle && \
 ENV LD_LIBRARY_PATH=/opt/oracle/instantclient
 ENV PATH=$LD_LIBRARY_PATH:$PATH
 
-# Oracle node
-RUN npm install -g n8n-nodes-oracle oracledb
+RUN npm install -g n8n-nodes-oracle
+ENV N8N_CUSTOM_EXTENSIONS="/usr/local/lib/node_modules/n8n-nodes-oracle"
+RUN npm install -g oracledb
 
-# Build dependencies
 RUN apk add --no-cache python3 make g++ git
-RUN npm install -g typescript
+RUN npm install -g typescript gulp
 
-# LlamaCloud node
-RUN mkdir -p /data/custom && \
-    git clone --depth 1 https://github.com/run-llama/n8n-llamacloud.git /tmp/n8n-llamacloud
+RUN mkdir -p /data/custom \
+ && git clone --depth 1 https://github.com/run-llama/n8n-llamacloud.git /tmp/n8n-llamacloud
 
 WORKDIR /tmp/n8n-llamacloud
-RUN npm install && \
-    npx rimraf dist && \
-    tsc && \
-    cp -r /tmp/n8n-llamacloud/dist/* /data/custom/ 2>/dev/null || \
-    (mkdir -p dist && cp -r nodes credentials package.json /data/custom/)
+RUN npm install
+RUN npm install gulp gulp-cli
+RUN npx gulp build:icons || true
+RUN npm run build || true
 
-# Configure custom extensions path
-ENV N8N_CUSTOM_EXTENSIONS="/usr/local/lib/node_modules/n8n-nodes-oracle;/data/custom"
+RUN cp -r /tmp/n8n-llamacloud/dist/* /data/custom/
+WORKDIR /
+RUN rm -rf /tmp/n8n-llamacloud
 
-# Cleanup
+USER node
 WORKDIR /
 RUN rm -rf /tmp/n8n-llamacloud
 
