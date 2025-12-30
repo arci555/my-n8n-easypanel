@@ -2,7 +2,11 @@ FROM n8nio/n8n:2.1.4
 
 USER root
 
-RUN apk add --no-cache git python3 make g++
+# Instalar dependencias con apt, no con apk
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+    git python3 make g++ \
+ && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /data/custom
 
@@ -20,6 +24,7 @@ RUN rm -rf /tmp/n8n-llamacloud
 ENV N8N_CUSTOM_EXTENSIONS="/data/custom"
 
 USER node
+
 
 
 
